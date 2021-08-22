@@ -1,5 +1,5 @@
 // Dependencies
-    require('express-async-errors');
+    require('express-async-errors'); // Sem isso o Middleware de Capitacao de erro nao funciona.
     const express = require('express');
     const app = express();
 
@@ -22,7 +22,7 @@
     // connection.sync({ force: false }).catch(err => console.error(err));
 
 // Controllers
-    const controller = require('./controllers');   
+    const controller = require('./controllers');
 
 // Config
     app.use(express.urlencoded({ extended: true }));
@@ -38,9 +38,10 @@
     app.post('/tags', authentication, controller.tags_POST);
     app.post('/login', controller.userLogin_POST);
     app.post('/compliments', authentication, controller.compliments_POST);
-    app.get('/compliments/receiveds', authentication, controller.receiveds)
 
-    app.get('/test-get', authentication, controller.test);
+    app.get('/compliments/receiveds', authentication, controller.compliments_receiveds);
+    app.get('/compliments/sent', authentication, controller.compliments_sent);
+    // Users - GET
 
 // Middlewares / Sempre Por depois
     app.use(validation);

@@ -68,7 +68,7 @@ class CreateUsers {
             console.error(err);
             throw Errors(500,err);
         }
-    }
+    };
 
     async Validation(userField){
         const { name,email,password } = userField;

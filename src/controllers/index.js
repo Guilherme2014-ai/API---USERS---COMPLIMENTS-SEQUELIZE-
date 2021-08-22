@@ -3,6 +3,9 @@
     const tagsService = require('../services/CreateTags');    
     const complimentsService = require('../services/Compliments');
 
+// Models
+    const complimentsModel = require('../models/compliments');
+
 // Main
     class Index{
 
@@ -39,9 +42,7 @@
 
             const token = await userService.Login(user);
 
-            res.json({
-                token: token
-            })
+            res.json({ token })
         };
         async compliments_POST(req,res){
 
@@ -61,23 +62,31 @@
             };
             
         };
-        async receiveds(req,res){
+        async compliments_sent(req,res){
             try{
 
-                const authentication = req.body["authentication"];
+                const idUser = req.body['user_id'];
+                const sentCompliments = await complimentsModel.findAll({ where: { user_sender: idUser } });
+
+                res.json({ sent_compliments: sentCompliments });
 
             }catch(err){
                 console.error(err);
                 throw err;
             };
         };
+        async compliments_receiveds(req,res){
+            try{
 
-        async test(req,res){
-            const users = await userService.findAll({
-                attributes: ['id','name', 'email','created_at','updated_at']
-            });
+                const idUser = req.body['user_id'];
+                const receivedCompliments = await complimentsModel.findAll({ where: { user_receiver: idUser } });
 
-            res.json({ users });
+                res.json({ received_compliments: receivedCompliments });
+
+            }catch(err){
+                console.error(err);
+                throw err;
+            };
         };
 
     };
