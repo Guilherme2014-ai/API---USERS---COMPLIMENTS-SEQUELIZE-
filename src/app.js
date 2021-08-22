@@ -41,7 +41,7 @@
 
     app.get('/compliments/receiveds', authentication, controller.compliments_receiveds);
     app.get('/compliments/sent', authentication, controller.compliments_sent);
-    // Users - GET
+    app.get('/users', authentication, controller.user);
 
 // Middlewares / Sempre Por depois
     app.use(validation);

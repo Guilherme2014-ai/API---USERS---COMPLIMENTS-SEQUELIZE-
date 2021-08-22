@@ -9,6 +9,27 @@
 // Main
     class Index{
 
+        async user(req,res){
+            try{
+
+                const users = await userService.findAll({
+                    include: [
+                        {
+                            model: complimentsModel, as: "Receiveds"
+                        },
+                        {
+                            model: complimentsModel, as: "Sent"
+                        }
+                    ]
+                });
+
+                res.json({ users });
+
+            }catch(err){
+                console.error(err);
+                throw err;
+            };
+        };
         async user_POST(req,res){    
 
             const { email,name,password } = req.body;
