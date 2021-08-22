@@ -1,10 +1,7 @@
 // Services
     const userService = require('../services/Users');
-    const tagsService = require('../services/CreateTags');
-    
-    const usersModel = require('../models/user');
-    const complimentsModel = require('../models/compliments');
-    const tagsModel = require('../models/tags');
+    const tagsService = require('../services/CreateTags');    
+    const complimentsService = require('../services/Compliments');
 
 // Main
     class Index{
@@ -20,8 +17,9 @@
                 id: user.id,
                 email: user.email,
                 name: user.name,
-                updatedAt: user.updatedAt,
-                createdAt: user.createdAt
+                rule: user.rule,
+                updated_at: user.updated_at,
+                created_at: user.created_at
             });
 
         };
@@ -47,17 +45,43 @@
         };
         async compliments_POST(req,res){
 
-            const users = await usersModel.findAll({ include: [complimentsModel] });
-            const tags = await tagsModel.findAll({ include: [complimentsModel] });
+            try{
 
-            res.json({
-                users,
-                tags
-            });
+                const { message,/*user_sender*/user_receiver,tag_id } = req.body;
+                const compliment = { message,user_receiver,tag_id };
+                const token = String(req.headers["authorization"]).replace('Bearer',"").replace(" ", "");
+
+                const created = await complimentsService.execute(compliment,token);
+
+                res.json({ created });
+
+            } catch(err){
+                console.error(err);
+                throw err;
+            };
             
+        };
+        async receiveds(req,res){
+            try{
+
+                const authentication = req.body["authentication"];
+
+            }catch(err){
+                console.error(err);
+                throw err;
+            };
+        };
+
+        async test(req,res){
+            const users = await userService.findAll({
+                attributes: ['id','name', 'email','created_at','updated_at']
+            });
+
+            res.json({ users });
         };
 
     };
 
 // Exports
     module.exports = new Index();
+//

@@ -11,6 +11,7 @@ class CreateUsers {
             
             await this.Validation(userField);
             
+            userField["rule"] = false;
             userField["password"] = await bcrypt.hash(userField["password"], 10);
             
             return await userModel.create(userField);
@@ -27,7 +28,6 @@ class CreateUsers {
         }
 
     };
-
     async Login(userField){
         try{
             
@@ -37,7 +37,8 @@ class CreateUsers {
                 {
                 id: user.id,
                 name: user.name,
-                email: user.email
+                email: user.email,
+                rule: user.rule,
                 },
                 pass.jwt,
                 {
@@ -58,6 +59,16 @@ class CreateUsers {
         }
 
     };
+    async findAll(params){
+        try{
+
+            return await userModel.findAll(params);
+            
+        } catch(err){
+            console.error(err);
+            throw Errors(500,err);
+        }
+    }
 
     async Validation(userField){
         const { name,email,password } = userField;
@@ -74,6 +85,8 @@ class CreateUsers {
         if(!email || !password) throw Errors(400,'Bad Request !');
         
         const user = await userModel.findOne({ where: { email } }); // Expected: Null
+
+        console.log(user);
 
         if(!user) throw Errors(400,"Email / Pass is Wrong !"); // 'Throw' -> leva para o 'Cath' -> leva para a camada anterior, nesse caso ele cria um 'err' no middleware | OBS: Throw sempre leva ao erro
 

@@ -3,12 +3,26 @@
     const express = require('express');
     const app = express();
 
-// Controllers
-    const controller = require('./controllers/index');   
-
 // Database Conection
-    const connection = require('./database/index');
+    const connection = require('./database');
+    const compliments = require('./models/compliments');
+    const tags = require('./models/tags');
+    const users = require('./models/user');
+
     connection.authenticate().then(() => { console.log('Database Connected !') }).catch(err=>console.error(err));
+
+    compliments.init(connection);
+    tags.init(connection);
+    users.init(connection);
+
+    compliments.associate(connection.models);
+    tags.associate(connection.models);
+    users.associate(connection.models);
+
+    // connection.sync({ force: false }).catch(err => console.error(err));
+
+// Controllers
+    const controller = require('./controllers');   
 
 // Config
     app.use(express.urlencoded({ extended: true }));
@@ -23,7 +37,10 @@
     app.post('/users', controller.user_POST);
     app.post('/tags', authentication, controller.tags_POST);
     app.post('/login', controller.userLogin_POST);
-    app.get('/compliments', controller.compliments_POST);
+    app.post('/compliments', authentication, controller.compliments_POST);
+    app.get('/compliments/receiveds', authentication, controller.receiveds)
+
+    app.get('/test-get', authentication, controller.test);
 
 // Middlewares / Sempre Por depois
     app.use(validation);

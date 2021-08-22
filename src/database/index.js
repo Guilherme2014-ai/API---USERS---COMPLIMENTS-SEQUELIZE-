@@ -1,6 +1,10 @@
-const { Sequelize } = require('sequelize');
-const DBS_CONFIG = require('../config/config.json').development;
+// Dependencies
+    const { Sequelize } = require('sequelize'); // Desestruturacao ES6 Necessaria para tipagem do Sequelize
+    const dbConfig = require('../config/config.json').development;
+    
+// Connection
+    const connection = new Sequelize(dbConfig);
 
-const connection = new Sequelize(DBS_CONFIG);
-
-module.exports = connection;
+// Exports
+    module.exports = connection;
+//

@@ -1,24 +1,38 @@
-const connection = require('../database/index');
-const sequelize = require('sequelize');
+const { DataTypes, Model } = require('sequelize');
 
-const User = connection.define('users', {
+class Users extends Model {
+  static init(sequelize){
+    super.init({
+      
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        email: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        password: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        rule: {
+          type: DataTypes.BOOLEAN,
+          defaultValue: false
+        }
 
-    name: {
-        type: sequelize.STRING,
-        allowNull: false
-    },
-    email: {
-        type: sequelize.STRING,
-        allowNull: false
-    },
-    password: {
-      type: sequelize.STRING,
-      allowNull: false
-    }
+    },{
+      sequelize,
+      modelName: "users"
+    })
+  }
 
-});
+  static associate(models){
+    this.hasMany(models.compliments, { foreignKey: "user_receiver", as: "Receiveds" });
+    this.hasMany(models.compliments, { foreignKey: "user_sender", as: "Sent" });
+  }
+}
 
-//User.hasMany(compliments, { foreignKey: "user_receiver" }) // compliments/foreignKey/user/receiver
+// Tags.sync({ force: false }).then(()=>{ console.log('Tags_Sync_Success !') }).catch(err => console.error(`Tags_Sync_ERROR(${err})`));
 
-User.sync({ force: false }).catch(err=>console.error(err));
-module.exports = User;
+module.exports = Users;

@@ -1,49 +1,41 @@
-// Dependencies
-  const connection = require('../database/index');
-  const { Sequelize } = require('sequelize');
+const { DataTypes, Model } = require('sequelize');
 
-// Model's
-  const Users = require('./user');
-  const Tags = require('./tags');
+class Compliments extends Model {
+  static init(sequelize){
+    super.init({
 
-// Define
-  const Compliments = connection.define('compliments', {
+      message: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      user_receiver: {
+        type: DataTypes.NUMBER,
+        allowNull: false
+      },
+      user_sender: {
+        type: DataTypes.NUMBER,
+        allowNull: false
+      },
+      tag_id: {
+        type: DataTypes.NUMBER,
+        allowNull: false
+      }
+      
+    },{
+      sequelize,
+      modelName: "compliments"
+    })
+  }
+
+  static associate(models){
+    // Tag
+      this.belongsTo(models.tags, { foreignKey: "tag_id", as: "Compliment_Tag" });
+    // User
+      this.belongsTo(models.users, { foreignKey: "user_receiver", as: "Receiveds" });
+      this.belongsTo(models.users, { foreignKey: "user_sender", as: "Sent" });
+    //
+  }
+};
 
 
-    message: {
-      type: Sequelize.STRING,
-      allowNull: false,
-    },
-
-    user_sender: {
-      type: Sequelize.INTEGER,
-      allowNull: false
-    },
-
-    user_receiver: {
-      type: Sequelize.INTEGER,
-      allowNull: false
-    },
-    
-    tag_id: {
-      type: Sequelize.INTEGER,
-      allowNull: false
-    }
-
-    
-  });
-
-// Config Foreign Key's
-  Tags.hasMany(Compliments, { foreignKey: 'tag_id' });
-  Compliments.belongsTo(Tags, { foreignKey: 'tag_id', as:'Tag' });
-
-  Users.hasMany(Compliments, { foreignKey: 'user_receiver' });
-  Compliments.belongsTo(Users, { foreignKey: 'user_receiver', as:'User Receiver' });
-
-  Users.hasMany(Compliments, { foreignKey: 'user_sender' });
-  Compliments.belongsTo(Users, { foreignKey: 'user_sender', as:'User Sender' });
-
-// Others
-  Compliments.sync({ force: false }).catch(err=>console.error(err));
-  module.exports = Compliments;
-//
+module.exports = Compliments;

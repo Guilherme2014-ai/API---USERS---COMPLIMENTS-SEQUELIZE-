@@ -2,7 +2,7 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
 
-
+    queryInterface
     return queryInterface.createTable('compliments', {
       id: {
         allowNull: false,
@@ -14,7 +14,8 @@ module.exports = {
 
       message: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        defaultValue: new Date()
       },
       
 
@@ -24,7 +25,8 @@ module.exports = {
       },
       updated_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: new Date()
       }
     }).then(() => {
 

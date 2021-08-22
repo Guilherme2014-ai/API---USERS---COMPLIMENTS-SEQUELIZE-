@@ -1,17 +1,34 @@
-const connection = require('../database/index');
-const sequelize = require('sequelize');
+const { DataTypes, Model } = require('sequelize');
 
-const Tags = connection.define('tags', {
+class Tags extends Model {
+  static init(sequelize){
+    super.init({
 
-    name: {
-        type: sequelize.STRING,
+      name: {
+        type: DataTypes.STRING,
         allowNull: false,
         unique: true
-    }
+      },
+      created_at: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: new Date()
+      },
+      updated_at: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: new Date()
+      }
 
-});
+    },{
+      sequelize,
+      modelName: "tags"
+    })
+  }
 
-//Tags.hasMany(Compliments, { foreignKey: "tag_id" });
+  static associate(models){
+    this.hasMany(models.compliments, { foreignKey: "tag_id", as: "Tag_Compliments" });
+  }
+}
 
-Tags.sync({ force: false }).catch(err=>console.error(err));
 module.exports = Tags;
