@@ -1,13 +1,1 @@
-{
-  "development": {
-    "username": "root",
-    "password": "Celso_bixa2014",
-    "database": "nlw",
-    "host": "localhost",
-    "dialect": "mysql",
-    "define": {
-      "underscored": true,
-      "timestamps": true
-    }
-  }
-}
+************************
